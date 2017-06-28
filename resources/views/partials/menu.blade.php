@@ -12,7 +12,7 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li><a href="#">Создать</a></li>
+                <li><a href="{{ action('NoteController@create') }}">Создать</a></li>
                 <li><a href="#about">Экспорт</a></li>
                 <li><a href="#contact">Импорт</a></li>
             </ul>
