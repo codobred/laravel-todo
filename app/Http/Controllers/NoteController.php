@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Note;
 
 class NoteController extends Controller
 {
@@ -13,7 +14,9 @@ class NoteController extends Controller
      */
     public function index()
     {
-        return view('index');
+        $notes = Note::paginate(25);
+
+        return view('index', compact('notes'));
     }
 
     /**
@@ -23,7 +26,9 @@ class NoteController extends Controller
      */
     public function create()
     {
-        //
+
+
+        return view('create');
     }
 
     /**
@@ -80,5 +85,15 @@ class NoteController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function import()
+    {
+        return view('import');
+    }
+
+    public function export()
+    {
+        return view('export');
     }
 }

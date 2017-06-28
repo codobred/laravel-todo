@@ -12,3 +12,5 @@
 */
 
 Route::resource('/', 'NoteController');
+Route::get('/export', 'NoteController@export')->name('export');
+Route::get('/import', 'NoteController@import')->name('import');
