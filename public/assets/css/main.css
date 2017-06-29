@@ -2,5 +2,5 @@ body {
   padding-top: 70px;
 }
 textarea.form-control {
-  resize: vertical;
+  resize: vertical !important;
 }

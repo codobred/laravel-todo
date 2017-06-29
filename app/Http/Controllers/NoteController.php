@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Models\Note;
+use Illuminate\Support\Facades\Input;
 use Mockery\Exception;
 
 class NoteController extends Controller
@@ -36,12 +38,32 @@ class NoteController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * @param  \Illuminate\Http\Request  $request
+     * @return mixed
      */
     public function store(Request $request)
     {
-        dd($request);
+        $request->merge([
+            'short_description' => strip_tags($request->short_description),
+        ]);
+
+        $this->validate($request, [
+            'short_description' => 'required|max:200',
+            'content' => 'required',
+            'images' => 'required|image',
+        ]);
+
+
+        try {
+            Note::create($request->all());
+        } catch ( QueryException $exception ) {
+            dd($exception->getMessage());
+            return back()->withErrors([
+               'error' => 'Не удалось создать заметку.',
+            ]);
+        }
+
+        return redirect()->action('NoteController@index');
     }
 
     /**

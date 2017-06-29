@@ -13,6 +13,7 @@
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    @stack('styles')
     <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -26,6 +27,9 @@
 @include('partials.menu')
 
 <div class="container">
+    <div class="row">
+        @include('partials.errors')
+    </div>
     @yield('content')
 </div>
 
@@ -35,6 +39,8 @@
 <!-- Placed at the end of the document so the pages load faster -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+@stack('scripts')
+<script src="{{ asset('assets/js/main.js') }}"></script>
 
 </body>
 </html>
