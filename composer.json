@@ -40,7 +40,7 @@
         "post-install-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postInstall",
             "php artisan optimize",
-            "touch database/notes.sqlite",
+            "touch /app/database/notes.sqlite",
             "php artisan migrate"
 
         ],
