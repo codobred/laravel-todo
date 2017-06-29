@@ -52,7 +52,7 @@ class NoteController extends Controller
             foreach ($request->images as $image) {
                 $extension_file = '.' . $image->getClientOriginalExtension();
                 $path = 'upload/images';
-                $link = $path . "/{$note->id}/" . uniqid() . $extension_file;
+                $link = $path . "/{$note->id}/id" . uniqid() . $extension_file;
 
                 // save image on a server
                 $image->move($path, public_path($link));

@@ -43,7 +43,9 @@
                                     >
                                         <em class="glyphicon glyphicon-edit"></em>
                                     </a>
-                                    <a class="btn btn-danger">
+                                    <a class="btn btn-danger"
+                                        href="{{ action('NoteController@destroy') }}"
+                                    >
                                         <em class="glyphicon glyphicon-remove"></em>
                                     </a>
                                 </td>
