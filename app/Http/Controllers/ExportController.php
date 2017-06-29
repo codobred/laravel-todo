@@ -16,8 +16,10 @@ class ExportController extends Controller
 
             $notes = Note::all();
 
+            // call method if user want export xml
             if ($format === 'xml') {
                 return $this->xmlExport($notes);
+                // call method if user want export txt
             } elseif ($format === 'txt') {
                 return $this->txtExport($notes);
             }
@@ -38,7 +40,7 @@ class ExportController extends Controller
 
         @mkdir($exportPath, 0700, true);
 
-        // write field to xml file
+        // write fields to xml file
         foreach ($notes as $note) {
             $xml->startElement('data');
             $xml->writeAttribute('created_at', $note->created_at);
@@ -49,15 +51,8 @@ class ExportController extends Controller
 
             // full path to folder with xml file and images
             $pathToFolder = $exportPath . $note->id;
-            @mkdir($pathToFolder);
-
-            // copy  images from server to export folder
-            foreach ($note->image as $image) {
-                copy(
-                    public_path($image->link),
-                    $pathToFolder . '/' . pathinfo($image->link, PATHINFO_BASENAME)
-                );
-            }
+            // copy image to export folder
+            FileHelper::copyImagesToFolder($pathToFolder, $note);
         }
 
         $xml->endElement();
@@ -97,7 +92,6 @@ class ExportController extends Controller
             $pathToFolder = $exportPath . $note->id;
             // copy images to export folder
             FileHelper::copyImagesToFolder($pathToFolder, $note);
-
         }
 
         // set path for archive
