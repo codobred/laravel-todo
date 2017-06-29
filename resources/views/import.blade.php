@@ -14,3 +14,11 @@
         </form>
     </div>
 @endsection
+
+@push('styles')
+<style>
+    .form-control {
+        height: auto;
+    }
+</style>
+@endpush
