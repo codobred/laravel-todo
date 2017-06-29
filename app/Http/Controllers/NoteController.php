@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreNoteRequest;
+use App\Models\Image;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use App\Models\Note;
-use Illuminate\Support\Facades\Input;
 
 class NoteController extends Controller
 {
@@ -35,7 +35,7 @@ class NoteController extends Controller
 
     /**
      * @param StoreNoteRequest $request
-     * @return $this|\Illuminate\Http\RedirectResponse
+     * @return mixed
      */
     public function store(StoreNoteRequest $request)
     {
@@ -47,19 +47,24 @@ class NoteController extends Controller
             ]);
         }
 
+        // check if have uploaded image
         if (isset($request->images) && !is_null($request->images)) {
             foreach ($request->images as $image) {
                 $extension_file = '.' . $image->getClientOriginalExtension();
-                $path = public_path('upload/images');
+                $path = 'upload/images';
                 $link = $path . "/{$note->id}/" . uniqid() . $extension_file;
-                $image->move($path, $link);
-                Image::create('image' -> $link);
+
+                // save image on a server
+                $image->move($path, public_path($link));
+
+                // store to DB
+                Image::create([
+                    'note_id' => $note->id,
+                    'link' => $link,
+                ]);
             }
-            Image::
+
         }
-
-
-
 
         return redirect()->action('NoteController@index');
     }
