@@ -18,7 +18,8 @@ class Note extends Model
 
     public function delete()
     {
-        foreach ($this->image() as $image)
+
+        foreach ($this->image as $image)
             $image->delete();
         parent::delete();
     }

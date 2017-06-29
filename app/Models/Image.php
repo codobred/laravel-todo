@@ -20,7 +20,6 @@ class Image extends Model
 
     public function delete()
     {
-        dd(123);
         @unlink(public_path($this->link));
         parent::delete();
     }
