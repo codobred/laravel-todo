@@ -33,7 +33,7 @@ class ExportController extends Controller
         $xml->startDocument();
         $xml->startElement('notes');
 
-        $exportPath = public_path('export/XmlExport/') . uniqid() . '/';
+        $exportPath = public_path('export-note/XmlExport/') . uniqid() . '/';
 
         @mkdir($exportPath, 0700, true);
 
@@ -59,15 +59,18 @@ class ExportController extends Controller
         $xml->endElement();
         $xml->endDocument();
 
+        // clean memory
         $content = $xml->outputMemory();
-        file_put_contents('xmlExport.xml', $content);
-
         $xml = null;
+
+        $exportFile = public_path('export-note/xmlExport-'. uniqid() .'.xml');
+        file_put_contents($exportFile, $content);
+
 
         \File::deleteDirectory($exportPath, true);
         rmdir($exportPath);
 
-        return response()->download(public_path('xmlExport.xml'));
+        return response()->download($exportFile);
     }
 
     protected function txtExport($notes)
