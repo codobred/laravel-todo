@@ -2,4 +2,7 @@
 
 import '../styl';
 
-console.log('start');
+if ( $('.summernote').length ) {
+    $('.summernote').summernote();
+
+}
