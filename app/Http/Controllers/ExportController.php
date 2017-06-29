@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Note;
-use App\Models\Image;
+use App\Http\Helper\FileHelper;
 use XMLWriter;
 
 class ExportController extends Controller
@@ -16,8 +16,10 @@ class ExportController extends Controller
 
             $notes = Note::all();
 
+            // call method if user want export xml
             if ($format === 'xml') {
                 return $this->xmlExport($notes);
+                // call method if user want export txt
             } elseif ($format === 'txt') {
                 return $this->txtExport($notes);
             }
@@ -33,10 +35,12 @@ class ExportController extends Controller
         $xml->startDocument();
         $xml->startElement('notes');
 
+        // path for export folder
         $exportPath = public_path('export-note/XmlExport/') . uniqid() . '/';
 
         @mkdir($exportPath, 0700, true);
 
+        // write fields to xml file
         foreach ($notes as $note) {
             $xml->startElement('data');
             $xml->writeAttribute('created_at', $note->created_at);
@@ -45,15 +49,10 @@ class ExportController extends Controller
             $xml->writeAttribute('id', $note->id);
             $xml->endElement();
 
+            // full path to folder with xml file and images
             $pathToFolder = $exportPath . $note->id;
-            @mkdir($pathToFolder);
-
-            foreach ($note->image as $image) {
-                copy(
-                    public_path($image->link),
-                    $pathToFolder . '/' . pathinfo($image->link, PATHINFO_BASENAME)
-                );
-            }
+            // copy image to export folder
+            FileHelper::copyImagesToFolder($pathToFolder, $note);
         }
 
         $xml->endElement();
@@ -63,18 +62,45 @@ class ExportController extends Controller
         $content = $xml->outputMemory();
         $xml = null;
 
-        $exportFile = public_path('export-note/xmlExport-'. uniqid() .'.xml');
+        $exportFile = $exportPath . 'AllNotes.xml';
         file_put_contents($exportFile, $content);
 
+        $archivePath = public_path('XmlExport.zip');
 
-        \File::deleteDirectory($exportPath, true);
-        rmdir($exportPath);
+        // create archive with xml file and images
+        FileHelper::createArchive($archivePath, $exportPath);
+        // remove files
+        FileHelper::removeFiles($exportPath);
 
-        return response()->download($exportFile);
+        return response()->download($archivePath);
     }
 
     protected function txtExport($notes)
     {
-        //
+        $exportPath = public_path('export-note/TxtExport/') . uniqid() . '/';
+        @mkdir($exportPath, 0700, true);
+
+        foreach ($notes as $note)
+        {
+            $file = fopen($exportPath . "id{$note->id}.txt", "a");
+            fwrite($file, 'note_id# ' . $note->id . "\n");
+            fwrite($file, 'note_short_description# ' . $note->short_description . "\n" );
+            fwrite($file, 'note_content# ' . $note->content . "\n" );
+            fclose($file);
+
+            // path to folder with notes and images
+            $pathToFolder = $exportPath . $note->id;
+            // copy images to export folder
+            FileHelper::copyImagesToFolder($pathToFolder, $note);
+        }
+
+        // set path for archive
+        $archivePath = public_path('TxtExport.zip');
+        // create archive with files
+        FileHelper::createArchive($archivePath, $exportPath);
+        // remove files
+        FileHelper::removeFiles($exportPath);
+
+        return response()->download($archivePath);
     }
 }
