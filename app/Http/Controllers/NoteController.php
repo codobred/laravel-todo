@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreNoteRequest;
 use Illuminate\Database\QueryException;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Models\Note;
 use Illuminate\Support\Facades\Input;
-use Mockery\Exception;
 
 class NoteController extends Controller
 {
@@ -30,38 +29,37 @@ class NoteController extends Controller
      */
     public function create()
     {
-
-
         return view('create');
     }
 
+
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return mixed
+     * @param StoreNoteRequest $request
+     * @return $this|\Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request)
+    public function store(StoreNoteRequest $request)
     {
-        $request->merge([
-            'short_description' => strip_tags($request->short_description),
-        ]);
-
-        $this->validate($request, [
-            'short_description' => 'required|max:200',
-            'content' => 'required',
-            'images' => 'required|image',
-        ]);
-
-
         try {
-            Note::create($request->all());
-        } catch ( QueryException $exception ) {
-            dd($exception->getMessage());
+            $note = Note::create($request->all());
+        } catch (QueryException $exception) {
             return back()->withErrors([
-               'error' => 'Не удалось создать заметку.',
+                'error' => 'Не удалось создать заметку.',
             ]);
         }
+
+        if (isset($request->images) && !is_null($request->images)) {
+            foreach ($request->images as $image) {
+                $extension_file = '.' . $image->getClientOriginalExtension();
+                $path = public_path('upload/images');
+                $link = $path . "/{$note->id}/" . uniqid() . $extension_file;
+                $image->move($path, $link);
+                Image::create('image' -> $link);
+            }
+            Image::
+        }
+
+
+
 
         return redirect()->action('NoteController@index');
     }

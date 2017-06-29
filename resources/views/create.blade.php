@@ -32,7 +32,7 @@
                 </div>
                 <div class="form-group">
                     <label for="thumbs">Картинки заметки</label>
-                    <input name="images" type="file" required="required" id="thumbs" multiple>
+                    <input name="images[]" type="file" id="thumbs" multiple>
                     <p class="help-block">Можно загрузить несколько картинок</p>
                 </div>
                 <button type="submit" class="btn btn-primary pull-right">Сохранить</button>
