@@ -7,6 +7,8 @@ use App\Models\Image;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use App\Models\Note;
+use Illuminate\Support\Facades\Response;
+use XMLWriter;
 
 class NoteController extends Controller
 {
@@ -124,10 +126,5 @@ class NoteController extends Controller
     public function import()
     {
         return view('import');
-    }
-
-    public function export()
-    {
-        return view('export');
     }
 }
