@@ -2,7 +2,5 @@
 
 import '../styl';
 
-if ( $('.summernote').length ) {
-    $('.summernote').summernote();
-
-}
+// init summernote
+$('.summernote').summernote();

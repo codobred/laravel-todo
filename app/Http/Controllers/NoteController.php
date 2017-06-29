@@ -51,20 +51,7 @@ class NoteController extends Controller
 
         // check if have uploaded image
         if (isset($request->images) && !is_null($request->images)) {
-            foreach ($request->images as $image) {
-                $extension_file = '.' . $image->getClientOriginalExtension();
-                $path = 'upload/images';
-                $link = $path . "/{$note->id}id" . uniqid() . $extension_file;
-
-                // save image on a server
-                $image->move($path, public_path($link));
-
-                // store to DB
-                Image::create([
-                    'note_id' => $note->id,
-                    'link' => $link,
-                ]);
-            }
+            $this->storeNoteImages($request->images, $note->id);
 
         }
 
@@ -79,7 +66,7 @@ class NoteController extends Controller
      */
     public function show($id)
     {
-        $note = Note::find($id);
+        $note = Note::firstOrFail($id);
         if (!$note)
             return response('Page not found', 404);
 
@@ -95,18 +82,38 @@ class NoteController extends Controller
     public function edit($id)
     {
         $note = Note::find($id);
+
+        return view('edit', compact('note'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param  StoreNoteRequest $request
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StoreNoteRequest $request, $id)
     {
-        $note = Note::find($id);
+        $note = Note::findOrFail($id);
+
+
+        try {
+            $note->update($request->all());
+        } catch (QueryException $exception) {
+            return back()->withErrors([
+                'error' => 'Не удалось отредактировать заметку.',
+            ]);
+        }
+
+        // check if have uploaded image
+        if (isset($request->images) && !is_null($request->images)) {
+            $this->storeNoteImages($request->images, $note->id);
+
+        }
+
+        return redirect()->action('NoteController@index');
+
     }
 
     /**
@@ -126,5 +133,30 @@ class NoteController extends Controller
     public function import()
     {
         return view('import');
+    }
+
+    public function deleteImage(Request $request)
+    {
+        Image::findOrFail($request->image_id)->delete();
+
+        return response()->json(['status' => 'ok']);
+    }
+
+    protected function storeNoteImages($images, $note_id)
+    {
+        foreach ($images as $image) {
+            $extension_file = '.' . $image->getClientOriginalExtension();
+            $path = 'upload/images';
+            $link = $path . "/{$note_id}id" . uniqid() . $extension_file;
+
+            // save image on a server
+            $image->move($path, public_path($link));
+
+            // store to DB
+            Image::create([
+                'note_id' => $note_id,
+                'link' => $link,
+            ]);
+        }
     }
 }

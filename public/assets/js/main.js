@@ -48,9 +48,8 @@
 
 	__webpack_require__(1);
 
-	if ($('.summernote').length) {
-	    $('.summernote').summernote();
-	}
+	// init summernote
+	$('.summernote').summernote();
 
 /***/ },
 /* 1 */
