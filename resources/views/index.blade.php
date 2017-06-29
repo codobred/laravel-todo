@@ -43,11 +43,13 @@
                                     >
                                         <em class="glyphicon glyphicon-edit"></em>
                                     </a>
-                                    <a class="btn btn-danger"
-                                        href="{{ action('NoteController@destroy') }}"
-                                    >
+                                    <form action="{{ action('NoteController@destroy', ['id' => $note->id]) }}" method="post">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        {{ csrf_field() }}
+                                        <input type="submit" value="delete">
                                         <em class="glyphicon glyphicon-remove"></em>
                                     </a>
+                                    </form>
                                 </td>
                             </tr>
                         @endforeach
