@@ -31,7 +31,7 @@
                         <tr>
                             <td class="hidden-xs text-center">
                                 @if ($notes->currentPage() != 1)
-                                    {{ $loop->iteration + 25 * ($notes->currentPage() - 1) }}
+                                    {{ $loop->iteration + $notes->perPage() * ($notes->currentPage() - 1) }}
                                 @else
                                     {{ $loop->iteration }}
                                 @endif
