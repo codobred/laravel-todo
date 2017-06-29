@@ -11,6 +11,9 @@
 |
 */
 
-Route::resource('/', 'NoteController');
+Route::get('/', function() {
+   return redirect('notes');
+});
+Route::resource('/notes', 'NoteController');
 Route::get('/export', 'NoteController@export')->name('export');
 Route::get('/import', 'NoteController@import')->name('import');
