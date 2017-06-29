@@ -15,6 +15,6 @@ Route::get('/', function() {
    return redirect('notes');
 });
 Route::resource('/notes', 'NoteController', ['except' => 'show']);
-Route::get('/export', 'ExportController@export')->name('export');
+Route::match(['get', 'post'], '/export', 'ExportController@export')->name('export');
 //Route::get('/export/xml', 'ExportController@xmlExport')->name('xmlExport');
 Route::get('/import', 'NoteController@import')->name('import');
