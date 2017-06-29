@@ -16,8 +16,8 @@ Route::get('/', function() {
 });
 Route::resource('/notes', 'NoteController', ['except' => 'show']);
 Route::match(['get', 'post'], '/export', 'ExportController@export')->name('export');
-//Route::get('/export/xml', 'ExportController@xmlExport')->name('xmlExport');
-Route::get('/import', 'NoteController@import')->name('import');
+Route::get('/import', 'ImportController@index')->name('import');
+Route::post('/import', 'ImportController@import')->name('import');
 
 // delete note image
 Route::post('/ajax/delete-image', 'NoteController@deleteImage')->name('ajax.delete-image');

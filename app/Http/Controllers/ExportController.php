@@ -83,9 +83,8 @@ class ExportController extends Controller
         foreach ($notes as $note)
         {
             $file = fopen($exportPath . "id{$note->id}.txt", "a");
-            fwrite($file, 'note_id# ' . $note->id . "\n");
-            fwrite($file, 'note_short_description# ' . $note->short_description . "\n" );
-            fwrite($file, 'note_content# ' . $note->content . "\n" );
+            fwrite($file, '||##||' . $note->short_description . "\n" );
+            fwrite($file, '||##||' . $note->content . "\n" );
             fclose($file);
 
             // path to folder with notes and images
