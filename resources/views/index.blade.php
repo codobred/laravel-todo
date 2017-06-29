@@ -35,7 +35,11 @@
                                     {{ $note->short_description }}
                                 </td>
                                 <td>
-                                    images
+                                    @foreach( $note->image as $image )
+                                        <a href="{{ $image->link }}" target="_blank">
+                                            <img src="{{ $image->link }}" alt="image" style="width: 50px; height: 50px;">
+                                        </a>
+                                    @endforeach
                                 </td>
                                 <td style="width: 150px;" align="center">
                                     <a class="btn btn-default"
@@ -48,7 +52,6 @@
                                         {{ csrf_field() }}
                                         <input type="submit" value="delete">
                                         <em class="glyphicon glyphicon-remove"></em>
-                                    </a>
                                     </form>
                                 </td>
                             </tr>
