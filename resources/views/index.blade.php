@@ -43,15 +43,21 @@
                                 </td>
                                 <td style="width: 150px;" align="center">
                                     <a class="btn btn-default"
-                                       href="{{ action('NoteController@edit', ['id' => $note->id]) }}"
-                                    >
+                                       href="{{ action('NoteController@edit', ['id' => $note->id]) }}">
                                         <em class="glyphicon glyphicon-edit"></em>
                                     </a>
-                                    <form action="{{ action('NoteController@destroy', ['id' => $note->id]) }}" method="post">
-                                        <input type="hidden" name="_method" value="DELETE">
+                                    <form
+                                            action="{{ action('NoteController@destroy', ['id' => $note->id]) }}"
+                                            method="post"
+                                            style="display: inline-block;"
+                                    >
                                         {{ csrf_field() }}
-                                        <input type="submit" value="delete">
-                                        <em class="glyphicon glyphicon-remove"></em>
+                                        <input type="hidden" name="_method" value="DELETE">
+
+                                        <button type="submit" class="btn btn-danger"
+                                           href="{{ action('NoteController@edit', ['id' => $note->id]) }}">
+                                            <em class="glyphicon glyphicon-remove"></em>
+                                        </button>
                                     </form>
                                 </td>
                             </tr>
